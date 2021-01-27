@@ -48,6 +48,11 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    max-width: 474px;
+    width: 100%;
+    .title {
+      padding-top: 25px;
+    }
     .descr {
       max-width: 240px;
       text-align: center;
