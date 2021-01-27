@@ -1,23 +1,20 @@
 <template>
   <div id="app">
-    <router-view />
+    <MainLayout />
   </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-
+import MainLayout from './layouts/MainLayout.vue'
 
 export default {
   name: 'App',
   components: {
-    
+    MainLayout
   }
 }
 </script>
 
 <style scoped lang="scss">
-#app {
 
-}
 </style>
