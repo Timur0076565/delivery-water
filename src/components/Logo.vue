@@ -1,6 +1,6 @@
 <template>
   <div class="logo-wrapper">
-		<img src="@/assets/images/icons/logo.svg" alt="">
+		<img src="@/assets/images/icons/logo.svg" alt="Logo">
 	</div>
 </template>
 
