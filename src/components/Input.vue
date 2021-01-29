@@ -3,21 +3,22 @@
 		class="input-component" 
 		type="text" 
 		:value="inputValue"
-    @input="changeInputVal"/>
+    @input="changeInputVal"
+    :placeholder="placeholder"
+  />
 </template>
 
 <script>
 export default {
-  components: {},
   props: {
-    // isPhone: {
-    //   type: Boolean,
-    //   default: false,
-		// },
 		inputValue: {
       type: String,
       default: "",
     },
+    placeholder: {
+      type: String,
+      default: "",
+    }
 	},
 	data() {
     return {
@@ -41,6 +42,11 @@ export default {
 	background-color: inherit;
 	width: 100%;
 	padding-bottom: 8px;
-	margin-bottom: 30px;
+  margin-bottom: 30px;
+  &::placeholder {
+    font-weight: normal;
+    font-size: 12px;
+    color: #BABDC2;
+  }
 }
 </style>

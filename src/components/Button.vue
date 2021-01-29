@@ -8,12 +8,6 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: "Button",
-};
-</script>
-
 <style scoped lang="scss">
 .component-button {
   display: flex;
@@ -33,6 +27,10 @@ export default {
 	border-radius: 20px;
   &:hover {
     opacity: .8;
+  }
+  @media only screen and (max-width: 980px) {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 </style>

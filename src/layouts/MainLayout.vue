@@ -1,62 +1,43 @@
 <template>
   <div class="main">
-    <div class="tieser">
-      <Logo />
-      <h1 class="title">Чистая Вода</h1>
-      <p class="descr">
-        Питьевая вода, предназначенная для ежедневного потребления, идеально
-        подходит для кулеров. Закажите доставку воды и мы привезем её на дом или
-        в офис.
-      </p>
-    </div>
-    <transition name="fade">
-      <router-view />
-    </transition>
+    <Tieser />
+    <!-- <transition name="fade"> -->
+      <router-view class="view"/>
+    <!-- </transition> -->
   </div>
 </template>
 
 <script>
-import Logo from "@/components/Logo.vue";
+import Tieser from '../components/Tieser.vue';
 
 export default {
   components: {
-    Logo,
+    Tieser,
   },
 };
 </script>
 
 <style scoped lang="scss">
-.fade-enter {
-  opacity: 0;
-}
-.fade-enter-active {
-  transition: opacity 0.2s;
-}
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-.fade-leave-to {
-  opacity: 0;
-}
+// .fade-enter {
+//   opacity: 0;
+// }
+// .fade-enter-active {
+//   transition: opacity 0.2s;
+// }
+// .fade-leave-active {
+//   transition: opacity 0.2s;
+// }
+// .fade-leave-to {
+//   opacity: 0;
+// }
 .main {
   background-color: #e9effc;
   height: 100vh;
   display: flex;
   align-items: center;
-  .tieser {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    max-width: 474px;
-    width: 100%;
-    .title {
-      padding-top: 25px;
-    }
-    .descr {
-      max-width: 240px;
-      text-align: center;
-    }
+  @media only screen and (max-width: 980px) {
+    background: #F5F8FF;
+    align-items: flex-start;
   }
 }
 </style>
