@@ -1,3 +1,5 @@
 module.exports = {
-	publicPath: "/delivery-water/"
+	publicPath: process.env.NODE_ENV === 'production'
+    ? '/delivery-water/'
+    : '/'
 }
