@@ -1,19 +1,19 @@
 <template>
-	<div class="total-component">
-		<h2 class="subtitle">Итого</h2>
-		<div class="total">{{ total }} ₽</div>
-	</div>
+  <div class="total-component">
+    <h2 class="subtitle">Итого</h2>
+    <div class="total">{{ total }}<span class="total-span">,00 ₽</span></div>
+  </div>
 </template>
 
 <script>
 export default {
-	props: {
-		total: {
-			type: String,
-			default: "",
-		}
-	}
-}
+  props: {
+    total: {
+      type: Number,
+      default: 0,
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -27,6 +27,9 @@ export default {
     font-weight: 500;
     font-size: 18px;
     color: #455273;
+    .total-span {
+      color: #babdc2;
+    }
   }
 }
 </style>

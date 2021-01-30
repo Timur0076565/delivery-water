@@ -52,7 +52,8 @@ export default {
       content: "";
       width: 16px;
       height: 16px;
-      background: #418de8 url("../assets/images/icons/checked.svg") no-repeat center;
+      background: #418de8 url("../assets/images/icons/checked.svg") no-repeat
+        center;
       border-radius: 3px;
       position: absolute;
       left: 50%;

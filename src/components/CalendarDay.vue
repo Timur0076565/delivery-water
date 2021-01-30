@@ -1,13 +1,22 @@
 <template>
-  <div
-    class="calendar-day"
-    :class="{ 'active-calendar-day': activeCalendar }"
-    @click="handleOnCurrentDay(calendar.weekend)"
-  >
-    <p class="day-number">{{ calendar.number }}</p>
-    <div class="day-name" :class="{ 'is-weekend': calendar.weekend }">
-      {{ calendar.day }}
-    </div>
+  <div class="calendar-day-wrapper">
+    <input
+      class="input-radio-day"
+      :id="calendar.number"
+      type="radio"
+      name="day"
+      :checked="checked"
+    />
+    <label
+      class="calendar-day"
+      @click="handleOnCurrentDay(calendar)"
+      :for="calendar.number"
+    >
+      <p class="day-number">{{ calendar.number }}</p>
+      <div class="day-name" :class="{ 'is-weekend': calendar.weekend }">
+        {{ calendar.day }}
+      </div>
+    </label>
   </div>
 </template>
 
@@ -20,22 +29,23 @@ export default {
         return {};
       },
     },
+    checked: {
+      type: String,
+      default: "",
+    },
   },
-  data() {
-    return {
-      activeCalendar: false,
-    };
-	},
-	methods: {
-		handleOnCurrentDay(value) {
-			this.activeCalendar = !this.activeCalendar
-			this.$emit('handleOnCurrentDay', value)
-		}
-	}
+  methods: {
+    handleOnCurrentDay(data) {
+      this.$emit("handleOnCurrentDay", data);
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
+.input-radio-day[type="radio"] {
+  display: none;
+}
 .calendar-day {
   width: 30px;
   height: 30px;
@@ -47,6 +57,7 @@ export default {
   flex-direction: column;
   cursor: pointer;
   margin-right: 8px;
+  line-height: 11px;
   &:last-child {
     margin-right: 0;
   }
@@ -63,7 +74,7 @@ export default {
     color: #fd7562;
   }
 }
-.active-calendar-day {
+.input-radio-day[type="radio"]:checked + .calendar-day {
   background: #ffc369;
   color: #fff;
   .day-number,

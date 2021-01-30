@@ -1,8 +1,10 @@
 <template>
   <div class="create-order-view">
     <div class="create-order-wrapper">
-      <h1 class="title" v-show="!isTwoStep">Заполните данные</h1>
-      <div class="form" v-show="!isTwoStep">
+      <h1 class="title" :class="{ 'is-one-step': isOneStep }">
+        Заполните данные
+      </h1>
+      <div class="form" :class="{ 'is-one-step': isOneStep }">
         <div class="inputs-wrapper">
           <div class="inputs">
             <Input
@@ -39,14 +41,13 @@
             Я согласен на <span>обработку персональных данных</span>
           </p>
         </div>
-        <!-- <Button @click="handleGoToNextStep" v-show="isMobile">Далее</Button> -->
       </div>
       <div
         class="prev-arroy"
         @click="handleGoToPrevStep"
-        v-show="!isMobile"
+        :class="{ 'is-mobile': isMobile }"
       ></div>
-      <div class="order-actions" v-show="!isMobile">
+      <div class="order-actions" :class="{ 'is-mobile': isMobile }">
         <div class="choice-water">
           <h2 class="subtitle">Вода</h2>
           <div class="cards">
@@ -56,6 +57,10 @@
               :key="index"
               :id="index"
               :data="card"
+              :checked="index === 0 ? 'checked' : ''"
+              @getValueCurrentCard="getValueCurrentCard"
+              @increase="increase"
+              @decrease="decrease"
             />
           </div>
         </div>
@@ -71,6 +76,7 @@
                   :key="item.id"
                   :calendar="item"
                   class="calendar-day"
+                  :checked="item.id === 0 ? 'checked' : ''"
                   @handleOnCurrentDay="handleOnCurrentDay"
                 />
               </transition-group>
@@ -84,6 +90,9 @@
                 class="time-button"
                 v-for="(time, index) in timesView"
                 :key="index"
+                :name="time"
+                :checked="index === 0 ? 'checked' : ''"
+                @getSelectedTime="getSelectedTime"
               >
                 {{ time }}
               </TimeButton>
@@ -91,18 +100,27 @@
           </div>
         </div>
       </div>
-      <TotalPrice class="total" :total="total" v-show="!isMobile" />
+      <TotalPrice
+        class="total"
+        :total="totalPrice"
+        :class="{ 'is-mobile': isMobile }"
+      />
     </div>
-    <Button @click="handleForDoOrder" v-show="!isMobile">Заказать воду</Button>
     <Button
-      @click="handleGoToNextStep"
-      v-show="isMobile"
+      class="btn-order"
+      @click="handleForDoOrder"
       :class="{
-        'is-btn-disable':
-          (formData.inputValueName &&
-            formData.inputValueEmail &&
-            formData.inputValuePhone &&
-            formData.inputValueAdress) === '' || formData.checked !== true,
+        'is-btn-disable': isFormEmpty,
+        'is-mobile': isMobile,
+      }"
+      >Заказать воду</Button
+    >
+    <Button
+      class="btn-next-step"
+      @click="handleGoToNextStep"
+      :class="{
+        'is-btn-disable': isFormEmpty,
+        'is-one-step': isOneStep,
       }"
       >Далее</Button
     >
@@ -131,10 +149,10 @@ export default {
   data() {
     return {
       formData: {
-        inputValueName: "Кудряшов Вячеслав Сергеевич",
-        inputValueEmail: "voda@mail.ru",
-        inputValuePhone: "+7 (905) 606-40-04",
-        inputValueAdress: "г. Самара, ул. Спортивная 25, офис 305",
+        inputValueName: "",
+        inputValueEmail: "",
+        inputValuePhone: "",
+        inputValueAdress: "",
         checked: false,
       },
       placeholderName: "ФИО",
@@ -143,25 +161,30 @@ export default {
       placeholderAdress: "Адрес доставки",
       cards: [
         {
-          liters: "18,9",
+          productName: "Бутыль 18,9 л",
           quantity: 1,
           cost: 220,
           img: require("@/assets/images/icons/big-bottle.svg"),
         },
         {
-          liters: "1,5",
+          productName: "Блок по 1,5 л",
           quantity: 6,
           cost: 175,
           img: require("@/assets/images/icons/little-bottles.svg"),
         },
         {
-          liters: "0,5",
+          productName: "Блок по 0,5 л",
           quantity: 12,
           cost: 270,
           img: require("@/assets/images/icons/little-bottles.svg"),
         },
       ],
-      total: "220,00",
+      total: 220,
+      totalPrice: 220,
+      quantity: 1,
+      selectedTime: "10:00 - 11:00",
+      selectedDay: "11",
+      productName: "Бутыль 18,9 л",
       times: ["10:00 - 11:00", "12:00 - 13:00", "15:00 - 16:00"],
       calendar: [
         { day: "вт", number: "11", id: 0, weekend: false },
@@ -171,17 +194,25 @@ export default {
         { day: "сб", number: "15", id: 4, weekend: true },
         { day: "вс", number: "16", id: 5, weekend: true },
       ],
-      activeCalendar: false,
       isWeekend: false,
       isMobile: false,
-      isTwoStep: false,
       isBtnDisable: true,
+      isOneStep: false,
     };
   },
   computed: {
     timesView() {
       return this.times.filter((time) =>
         this.isWeekend ? time !== "10:00 - 11:00" : time
+      );
+    },
+    isFormEmpty() {
+      return (
+        (this.formData.inputValueName &&
+          this.formData.inputValueEmail &&
+          this.formData.inputValuePhone &&
+          this.formData.inputValueAdress) === "" ||
+        this.formData.checked !== true
       );
     },
   },
@@ -194,60 +225,53 @@ export default {
       const last = this.calendar.pop();
       this.calendar = [last].concat(this.calendar);
     },
-    handleOnCurrentDay(value) {
-      this.isWeekend = value;
+    handleOnCurrentDay(data) {
+      this.isWeekend = data.weekend;
+      this.selectedDay = data.number;
     },
     handleForDoOrder() {
-      this.$router.push({ name: "completedOrder" });
-    },
-    hiddenElementsIsMobile() {
-      window.innerWidth <= 980 ? (this.isMobile = true) : this.isMobile;
-    },
-    handleGoToNextStep() {
-      const {
-        inputValueName,
-        inputValueEmail,
-        inputValuePhone,
-        inputValueAdress,
-        checked,
-      } = this.formData;
-      if (
-        (inputValueName &&
-          inputValueEmail &&
-          inputValuePhone &&
-          inputValueAdress) !== "" &&
-        checked
-      ) {
-        this.isMobile = false;
-        this.isTwoStep = true;
+      const { inputValuePhone, inputValueAdress } = this.formData;
+      const data = {
+        orderId: Math.floor(Math.random() * Math.floor(999)),
+        price: this.totalPrice,
+        product: this.productName,
+        quantity: this.quantity,
+        date: `${this.selectedDay} февраля`,
+        time: this.selectedTime,
+        adress: inputValueAdress,
+        phone: inputValuePhone,
+      };
+      if (!this.isFormEmpty) {
+        this.$store.dispatch("CREATE_ORDER", data);
+        this.$router.push({ name: "completedOrder" });
       }
     },
-    isNoDisableBtn() {
-      const {
-        inputValueName,
-        inputValueEmail,
-        inputValuePhone,
-        inputValueAdress,
-        checked,
-      } = this.formData;
-      if (
-        (inputValueName &&
-          inputValueEmail &&
-          inputValuePhone &&
-          inputValueAdress) !== "" &&
-        checked
-      ) {
-        this.isBtnDisable = true;
+    handleGoToNextStep() {
+      if (!this.isFormEmpty) {
+        this.isMobile = true;
+        this.isOneStep = true;
       }
     },
     handleGoToPrevStep() {
-      this.isMobile = true;
-      this.isTwoStep = false;
+      this.isMobile = false;
+      this.isOneStep = false;
     },
-  },
-  mounted() {
-    this.hiddenElementsIsMobile();
-    this.isNoDisableBtn();
+    getValueCurrentCard(data) {
+      this.productName = data.productName;
+      this.totalPrice = data.cost;
+      this.total = data.cost;
+    },
+    increase(sum) {
+      this.quantity = sum;
+      this.totalPrice += this.total;
+    },
+    decrease(sum) {
+      this.quantity = sum;
+      this.totalPrice > 0 ? (this.totalPrice -= this.total) : this.totalPrice;
+    },
+    getSelectedTime(value) {
+      this.selectedTime = value;
+    },
   },
 };
 </script>
@@ -319,7 +343,7 @@ export default {
     position: relative;
     display: none;
     @media only screen and (max-width: 980px) {
-      display: block;
+      display: none;
     }
     &::after {
       content: "";
@@ -335,7 +359,19 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    @media only screen and (max-width: 980px) {
+      display: none;
+    }
+    @media only screen and (max-width: 980px) {
+      flex-direction: column;
+      align-items: center;
+      border-top: none;
+    }
     .choice-water {
+      @media only screen and (max-width: 980px) {
+        min-width: 100%;
+        border-bottom: 1px dashed #d5dde0;
+      }
       .subtitle {
         padding-bottom: 20px;
       }
@@ -355,6 +391,10 @@ export default {
     }
     .choice-date {
       min-width: 297px;
+      @media only screen and (max-width: 980px) {
+        min-width: 100%;
+        padding-bottom: 30px;
+      }
       .subtitle {
         padding-bottom: 20px;
       }
@@ -435,8 +475,32 @@ export default {
   }
   .total {
     margin-bottom: 50px;
+    @media only screen and (max-width: 980px) {
+      display: none;
+    }
     @media only screen and (max-height: 750px) {
       margin-bottom: 30px;
+    }
+  }
+  .btn-order {
+    @media only screen and (max-width: 980px) {
+      display: none;
+    }
+  }
+  .btn-next-step {
+    display: none;
+    @media only screen and (max-width: 980px) {
+      display: flex;
+    }
+  }
+  .is-mobile {
+    @media only screen and (max-width: 980px) {
+      display: flex;
+    }
+  }
+  .is-one-step {
+    @media only screen and (max-width: 980px) {
+      display: none;
     }
   }
   .is-btn-disable {

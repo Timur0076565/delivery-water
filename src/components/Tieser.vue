@@ -40,7 +40,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   max-width: 474px;
-  width: 100%;
+	width: 100%;
   @media only screen and (max-width: 980px) {
 		max-width: 100%;
 		height: 100%;
@@ -64,6 +64,8 @@ export default {
   }
 }
 .is-cliked {
-	z-index: -1;
+	@media only screen and (max-width: 980px) {
+		z-index: -1;
+	}
 }
 </style>

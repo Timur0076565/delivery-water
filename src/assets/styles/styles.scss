@@ -1,3 +1,13 @@
+@font-face {
+	font-family: "Cera Pro";
+	src: url(../fonts/CeraPro-Regular.eot);
+	src: url(../fonts/CeraPro-Regular.woff) format("woff"), url(../fonts/CeraPro-Regular.ttf) format("truetype")
+}
+@font-face {
+	font-family: "Cera Pro Bold";
+	src: url(../fonts/CeraPro-Medium.eot);
+	src: url(../fonts/CeraPro-Medium.woff) format("woff"), url(../fonts/CeraPro-Medium.ttf) format("truetype")
+}
 * {
 	box-sizing: border-box;
 }
@@ -12,6 +22,7 @@ h1,h2,p,input {
 	padding: 0;
 }
 h1,h2 {
+	font-family: 'Cera Pro Bold';
 	font-weight: bold;
 }
 h1 {

@@ -7,7 +7,7 @@ export default new Vuex.Store({
 	state: {
 		order: {
 			orderId: "221",
-			price: "220,00",
+			price: 220,
 			product: "Бутыль 18,9 л",
 			quantity: 1,
 			date: "12 февраля",
@@ -16,22 +16,14 @@ export default new Vuex.Store({
 			phone: "+7 (905) 606-40-04",
 		},
 	},
-	getters: {
-		// LOGIN_VALIDATION(state) {
-		// 	return state.loginValidation
-		// }
-	},
 	actions: {
-		// async CHECK_LOGIN(context, argument) {
-		// 	await context.commit('CHECK_LOGIN', argument)
-		// }
+		CREATE_ORDER({ commit }, data) {
+			commit('SET_ORDER', data)
+		}
 	},
 	mutations: {
-		// CHECK_LOGIN(state, argument) {
-		// 	if (argument[0] === state.userEmail && argument[1] === state.userPassword) {
-		// 		argument[2].push({ name: 'dashboard' })
-		// 	}
-		// 	state.loginValidation = true;
-		// }
+		SET_ORDER(state, data) {
+			state.order = data
+		}
 	}
 })

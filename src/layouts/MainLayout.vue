@@ -1,9 +1,7 @@
 <template>
   <div class="main">
     <Tieser />
-    <!-- <transition name="fade"> -->
-      <router-view class="view"/>
-    <!-- </transition> -->
+    <router-view class="view"/>
   </div>
 </template>
 
@@ -18,18 +16,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// .fade-enter {
-//   opacity: 0;
-// }
-// .fade-enter-active {
-//   transition: opacity 0.2s;
-// }
-// .fade-leave-active {
-//   transition: opacity 0.2s;
-// }
-// .fade-leave-to {
-//   opacity: 0;
-// }
 .main {
   background-color: #e9effc;
   height: 100vh;

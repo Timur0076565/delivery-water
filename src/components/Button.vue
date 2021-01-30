@@ -22,7 +22,8 @@
   outline: none;
   cursor: pointer;
   width: 165px;
-	height: 40px;
+  height: 40px;
+  min-height: 40px;
 	background: #418DE8;
 	border-radius: 20px;
   &:hover {
