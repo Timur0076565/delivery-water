@@ -1,8 +1,8 @@
 <template>
-  <input 
-		class="input-component" 
-		type="text" 
-		:value="inputValue"
+  <input
+    class="input-component"
+    type="text"
+    :value="inputValue"
     @input="changeInputVal"
     :placeholder="placeholder"
   />
@@ -11,23 +11,32 @@
 <script>
 export default {
   props: {
-		inputValue: {
+    inputValue: {
       type: String,
       default: "",
     },
     placeholder: {
       type: String,
       default: "",
-    }
-	},
-	data() {
+    },
+    isPhone: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
     return {
       inputValueLocal: this.inputValue,
     };
   },
   methods: {
     changeInputVal(event) {
-      this.inputValueLocal = event.target.value;
+      this.isPhone
+        ? (this.inputValueLocal = event.target.value = event.target.value
+            .replace(/[^0-9]/g, "")
+            .replace(/^(\d{0})/g, '+$1')
+            .substr(0, 12))
+        : (this.inputValueLocal = event.target.value);
       this.$emit("changeInputVal", this.inputValueLocal);
     },
   },
@@ -38,15 +47,15 @@ export default {
 .input-component {
   outline: none;
   border: none;
-	border-bottom: 1px solid #d5dde0;
-	background-color: inherit;
-	width: 100%;
-	padding-bottom: 8px;
+  border-bottom: 1px solid #d5dde0;
+  background-color: inherit;
+  width: 100%;
+  padding-bottom: 8px;
   margin-bottom: 30px;
   &::placeholder {
     font-weight: normal;
     font-size: 12px;
-    color: #BABDC2;
+    color: #babdc2;
   }
 }
 </style>

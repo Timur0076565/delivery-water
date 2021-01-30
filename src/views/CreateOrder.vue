@@ -11,11 +11,14 @@
               :inputValue="formData.inputValueName"
               :placeholder="placeholderName"
               @changeInputVal="formData.inputValueName = $event"
+              :class="{ 'is-invalid': invalidName }"
             />
             <Input
               :inputValue="formData.inputValuePhone"
               :placeholder="placeholderPhone"
+              :isPhone="true"
               @changeInputVal="formData.inputValuePhone = $event"
+              :class="{ 'is-invalid': invalidPhone }"
             />
           </div>
           <div class="inputs">
@@ -23,11 +26,13 @@
               :inputValue="formData.inputValueEmail"
               :placeholder="placeholderEmail"
               @changeInputVal="formData.inputValueEmail = $event"
+              :class="{ 'is-invalid': invalidEmail }"
             />
             <Input
               :inputValue="formData.inputValueAdress"
               :placeholder="placeholderAdress"
               @changeInputVal="formData.inputValueAdress = $event"
+              :class="{ 'is-invalid': invalidAdress }"
             />
           </div>
         </div>
@@ -198,6 +203,10 @@ export default {
       isMobile: false,
       isBtnDisable: true,
       isOneStep: false,
+      invalidName: false,
+      invalidEmail: false,
+      invalidPhone: false,
+      invalidAdress: false,
     };
   },
   computed: {
@@ -215,8 +224,47 @@ export default {
         this.formData.checked !== true
       );
     },
+    validForm() {
+      return !this.invalidName && !this.invalidEmail && !this.invalidPhone && !this.invalidAdress;
+    }
   },
   methods: {
+    conditionalName() {
+      if (
+        this.formData.inputValueName === "" ||
+        this.formData.inputValueName.length < 3
+      ) {
+        this.invalidName = true;
+      } else {
+        this.invalidName = false;
+      }
+    },
+    conditionalPhone() {
+      if (this.formData.inputValuePhone === "") {
+        this.invalidPhone = true;
+      } else {
+        this.invalidPhone = false;
+      }
+    },
+    validEmail(email) {
+      // eslint-disable-next-line no-useless-escape
+      const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      return re.test(email);
+    },
+    conditionalEmail() {
+      if (!this.validEmail(this.formData.inputValueEmail)) {
+        this.invalidEmail = true;
+      } else {
+        this.invalidEmail = false;
+      }
+    },
+    conditionalAdress() {
+      if (this.formData.inputValueAdress === "") {
+        this.invalidAdress = true;
+      } else {
+        this.invalidAdress = false;
+      }
+    },
     next() {
       const first = this.calendar.shift();
       this.calendar = this.calendar.concat(first);
@@ -230,6 +278,10 @@ export default {
       this.selectedDay = data.number;
     },
     handleForDoOrder() {
+      this.conditionalName();
+      this.conditionalEmail();
+      this.conditionalPhone();
+      this.conditionalAdress();
       const { inputValuePhone, inputValueAdress } = this.formData;
       const data = {
         orderId: Math.floor(Math.random() * Math.floor(999)),
@@ -241,10 +293,11 @@ export default {
         adress: inputValueAdress,
         phone: inputValuePhone,
       };
-      if (!this.isFormEmpty) {
+      if (!this.isFormEmpty && this.validForm) {
         this.$store.dispatch("CREATE_ORDER", data);
         this.$router.push({ name: "completedOrder" });
       }
+      console.log(this.validForm)
     },
     handleGoToNextStep() {
       if (!this.isFormEmpty) {
@@ -315,6 +368,9 @@ export default {
           width: 100%;
           margin-right: 0;
         }
+      }
+      .is-invalid {
+        border-bottom: 1px solid red;
       }
     }
     .checkbox-wrapper {
