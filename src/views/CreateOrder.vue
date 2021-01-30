@@ -383,6 +383,9 @@ export default {
           @media only screen and (max-height: 750px) {
             padding-bottom: 30px;
           }
+          @media only screen and (max-height: 690px) {
+            margin-bottom: 5px;
+          }
           &:last-child {
             margin-right: 0;
           }
@@ -394,6 +397,9 @@ export default {
       @media only screen and (max-width: 980px) {
         min-width: 100%;
         padding-bottom: 30px;
+      }
+      @media only screen and (max-height: 690px) {
+        padding-bottom: 10px;
       }
       .subtitle {
         padding-bottom: 20px;
