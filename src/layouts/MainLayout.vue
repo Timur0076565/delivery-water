@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <Tieser />
-    <router-view base="/delivery-water/" class="view"/>
+    <router-view class="view"/>
   </div>
 </template>
 

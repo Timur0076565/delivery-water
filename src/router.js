@@ -5,6 +5,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
 	mode: 'history',
+	base: '/delivery-water/',
 	routes: [
 		{
 			path: '/',
