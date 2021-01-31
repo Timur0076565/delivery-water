@@ -470,9 +470,6 @@ export default {
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            .calendar-day {
-              transition: 0.3s ease all;
-            }
           }
           .arrow {
             width: 30px;
