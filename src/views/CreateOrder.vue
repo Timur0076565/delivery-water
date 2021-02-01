@@ -300,7 +300,11 @@ export default {
       console.log(this.validForm)
     },
     handleGoToNextStep() {
-      if (!this.isFormEmpty) {
+      this.conditionalName();
+      this.conditionalEmail();
+      this.conditionalPhone();
+      this.conditionalAdress();
+      if (!this.isFormEmpty && this.validForm) {
         this.isMobile = true;
         this.isOneStep = true;
       }
